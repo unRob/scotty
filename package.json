@@ -1,0 +1,27 @@
+{
+  "name": "scotty",
+  "description": "Beam me up!",
+  "version": "0.0.1",
+  "private": true,
+  "main": "app.coffee",
+  "readmeFilename": "README.md",
+  "license": "WTFPL",
+  "author": {
+    "name": "Roberto Hidalgo",
+    "email": "un@rob.mx",
+    "url": "http://rob.mx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unRob/scotty.git"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.6.3"
+  },
+  "dependencies": {
+    "sip-client": "0.0.1",
+    "socket.io": "~0.9.16",
+    "express": "~3.3.8",
+    "mongodb": "~1.3.19"
+  }
+}

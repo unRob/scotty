@@ -1,0 +1,7 @@
+logs
+app.js
+config.json
+node_modules
+.nginx
+.DS_Store
+*.ttf
