@@ -1,6 +1,7 @@
 # Scotty
 
-**scotty*** del *startrekismo*, "Beam me up, Scotty" 
+**scotty*** del *startrekismo*, "Beam me up, Scotty"
+
 !["Beam me up!"](http://www.crystalinks.com/beamtransporter.jpg)
 
 ## Ingredientes
