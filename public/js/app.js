@@ -1,5 +1,6 @@
 $(function(){
 
+	var LIVE = false;
 	document.body.addEventListener('touchmove', function(e){ e.preventDefault(); });
 
 	function whichTransitionEvent(){
@@ -119,14 +120,46 @@ $(function(){
 	};
 
 	var DOM = {
-		passphrase: $('#passphrase')
+		passphrase: $('#passphrase'),
+		line1: $('#line-1'),
+		line2: $('#line-2')
+	};
+
+	var connectTO = false;
+	var textConnect = function(){
+		if (LIVE) return false;
+
+		var text = DOM.line1.text();
+		var fwd = DOM.line1.data('direction');
+
+		if (text.match(/(\[•|•\])/)) {
+			console.log('bounce');
+			fwd = !fwd;
+		}
+		console.log(fwd);
+		if (fwd) {
+			text = text.replace('• ', ' •');
+		} else {
+			text = text.replace(' •', '• ');
+		}
+		DOM.line1.data('direction', fwd);
+		DOM.line1.text(text);
+
+		setTimeout(textConnect, 500);
 	};
 
 	socket.on('connect', function(){
+		clearTimeout(connectTO);
+		DOM.line1.text('BEAM').data('direction', false);
+		DOM.line2.show();
 		$('header').text('conectado').removeClass('offline');
 	});
 
 	socket.on('disconnect', function(){
+		LIVE = false;
+		DOM.line1.text('[•    ]').data('direction', true);
+		DOM.line2.hide();
+		textConnect();
 		$('header').text('reconectando').addClass('offline');
 	});
 
@@ -153,12 +186,12 @@ $(function(){
 
 	var started = null;
 	socket.on('beaming', function(){
-		console.log("Response time: "+((new Date())-started)/1000+'s')
+		console.log("Response time: "+((new Date())-started)/1000+'s');
 		console.log('done!');
 	});
 
 	socket.on('error', function(){
-		console.log("Response time: "+((new Date())-started)/1000+'s')
+		console.log("Response time: "+((new Date())-started)/1000+'s');
 		console.log('error');
 	});
 
@@ -189,6 +222,7 @@ $(function(){
 
 	$('#beam').on('click', function(evt){
 		evt.preventDefault();
+		if (!LIVE) return false;
 		$('#frase').text(frases.random());
 		$('body').addClass('beaming');
 		socket.emit('beam');

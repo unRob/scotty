@@ -147,9 +147,11 @@ body.unlocked #open {
 	display: block;
 	text-transform: uppercase;
 
+	white-space: pre;
 }
 
 #line-1 {
+	white-space: pre;
 	opacity: 1;
 	transform: scale(1);
 	letter-spacing: .05em;
