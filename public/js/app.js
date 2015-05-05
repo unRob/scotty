@@ -1,5 +1,8 @@
 $(function(){
 
+	document.body.addEventListener('touchmove', function(e){ e.preventDefault(); });
+	document.body.addEventListener('touchstart', function(e){ e.preventDefault(); });
+
 	function whichTransitionEvent(){
 	    var t;
 	    var el = document.createElement('fakeelement');
@@ -177,6 +180,7 @@ $(function(){
 
 		var req = $.get('/auth/'+pwd);
 		req.then(function(rs){
+			DOM.passphrase.blur();
 			socket.emit('auth', {token: rs.token});
 		});
 		req.fail(failed_login);
