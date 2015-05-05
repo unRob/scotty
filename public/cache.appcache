@@ -1,14 +1,13 @@
 CACHE MANIFEST
-#v 0.0.5
+#v 0.1.0
 
-#CACHE:
-#/js/jquery.js
-#/js/app.js
-#/img/pato-spinner.gif
-#/fonts/fs.ttf
-#/fonts/fsb.ttf
-#/css/reset.css
-#/css/app.css
+CACHE:
+/js/jquery.js
+/js/app.js
+/socket.io/socket.io.js
+/img/stars.png
+/css/reset.css
+/css/app.css
 
 NETWORK:
 *
