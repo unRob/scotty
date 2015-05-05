@@ -1,7 +1,6 @@
 $(function(){
 
 	document.body.addEventListener('touchmove', function(e){ e.preventDefault(); });
-	document.body.addEventListener('touchstart', function(e){ e.preventDefault(); });
 
 	function whichTransitionEvent(){
 	    var t;
