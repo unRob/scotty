@@ -149,6 +149,7 @@ $(function(){
 	};
 
 	socket.on('connect', function(){
+		LIVE = true;
 		clearTimeout(connectTO);
 		DOM.line1.text('BEAM').data('direction', false);
 		DOM.line2.show();
