@@ -133,10 +133,8 @@ $(function(){
 		var fwd = DOM.line1.data('direction');
 
 		if (text.match(/(\[•|•\])/)) {
-			console.log('bounce');
 			fwd = !fwd;
 		}
-		console.log(fwd);
 		if (fwd) {
 			text = text.replace('• ', ' •');
 		} else {
