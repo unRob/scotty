@@ -109,7 +109,8 @@ $(function(){
 
 	var socket = io.connect('http://'+window.location.hostname);
 	var token = new Token(localStorage.token);
-	var frases = ['Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'नमस्कार', 'Hallo', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
+	//'Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'Hallo',
+	var frases = ['नमस्कार', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
 	frases.random = function(){
 		var greeting = this[Math.floor(Math.random()*this.length)];
 		if (typeof greeting !== 'string') {
@@ -122,7 +123,8 @@ $(function(){
 	var DOM = {
 		passphrase: $('#passphrase'),
 		line1: $('#line-1'),
-		line2: $('#line-2')
+		line2: $('#line-2'),
+		frase: $('#frase')
 	};
 
 	var connectTO = false;
@@ -222,7 +224,12 @@ $(function(){
 	$('#beam').on('click', function(evt){
 		evt.preventDefault();
 		if (!LIVE) return false;
-		$('#frase').text(frases.random());
+		var frase = frases.random();
+		var clase = '';
+		if (frase.length >= 6) {
+			clase = 'small';
+		}
+		DOM.frase.text(frase).attr('class', clase);
 		$('body').addClass('beaming');
 		socket.emit('beam');
 		started = new Date();

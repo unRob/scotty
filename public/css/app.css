@@ -216,6 +216,10 @@ body.beaming #beaming #frase.active-number {
 	font-weight: 100;
 }
 
+#frase.small {
+	font-size: .8em;
+}
+
 footer {
 	font-size:48px;
 	line-height: 1em;
