@@ -213,11 +213,11 @@ body.beaming #beaming #frase.active-number {
 }
 
 #frase {
-	font-weight: 100;
+	font-weight: 100 !important;
 }
 
 #frase.small {
-	font-size: 60px;
+	font-size: 70px;
 }
 
 footer {

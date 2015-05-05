@@ -1,6 +1,54 @@
 $(function(){
 
 	var LIVE = false;
+	var socket = io.connect('http://'+window.location.hostname);
+	var token = new Token(localStorage.token);
+	//'Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'Hallo',
+	var frases = ['नमस्कार', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
+	frases.random = function(){
+		var greeting = this[Math.floor(Math.random()*this.length)];
+		if (typeof greeting !== 'string') {
+			var d = new Date();
+			greeting = greeting[+(d.getHour()>12)];
+		}
+		return greeting;
+	};
+
+	var DOM = {
+		passphrase: $('#passphrase'),
+		line1: $('#line-1'),
+		line2: $('#line-2'),
+		frase: $('#frase')
+	};
+
+	var connectTO = false;
+	var textConnect = function(){
+		if (LIVE) return false;
+
+		var text = DOM.line1.text();
+		var fwd = DOM.line1.data('direction');
+
+		if (text.match(/(\[•|•\])/)) {
+			fwd = !fwd;
+		}
+		if (fwd) {
+			text = text.replace('• ', ' •');
+		} else {
+			text = text.replace(' •', '• ');
+		}
+		DOM.line1.data('direction', fwd);
+		DOM.line1.text(text);
+
+		connectTO = setTimeout(textConnect, 500);
+	};
+	var started = null;
+	var failed_login = function(){
+		DOM.passphrase.addClass('error').focus();
+		setTimeout(function(){
+			DOM.passphrase.removeClass('error');
+		}, 2000);
+	};
+
 	document.body.addEventListener('touchmove', function(e){ e.preventDefault(); });
 
 	function whichTransitionEvent(){
@@ -107,47 +155,6 @@ $(function(){
 		return this.token ? !this.expired() : false;
 	};
 
-	var socket = io.connect('http://'+window.location.hostname);
-	var token = new Token(localStorage.token);
-	//'Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'Hallo',
-	var frases = ['नमस्कार', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
-	frases.random = function(){
-		var greeting = this[Math.floor(Math.random()*this.length)];
-		if (typeof greeting !== 'string') {
-			var d = new Date();
-			greeting = greeting[+(d.getHour()>12)];
-		}
-		return greeting;
-	};
-
-	var DOM = {
-		passphrase: $('#passphrase'),
-		line1: $('#line-1'),
-		line2: $('#line-2'),
-		frase: $('#frase')
-	};
-
-	var connectTO = false;
-	var textConnect = function(){
-		if (LIVE) return false;
-
-		var text = DOM.line1.text();
-		var fwd = DOM.line1.data('direction');
-
-		if (text.match(/(\[•|•\])/)) {
-			fwd = !fwd;
-		}
-		if (fwd) {
-			text = text.replace('• ', ' •');
-		} else {
-			text = text.replace(' •', '• ');
-		}
-		DOM.line1.data('direction', fwd);
-		DOM.line1.text(text);
-
-		connectTO = setTimeout(textConnect, 500);
-	};
-
 	socket.on('connect', function(){
 		LIVE = true;
 		clearTimeout(connectTO);
@@ -185,7 +192,7 @@ $(function(){
 		token.gc();
 	});
 
-	var started = null;
+
 	socket.on('beaming', function(){
 		console.log("Response time: "+((new Date())-started)/1000+'s');
 		console.log('done!');
@@ -196,12 +203,6 @@ $(function(){
 		console.log('error');
 	});
 
-	var failed_login = function(){
-		DOM.passphrase.addClass('error').focus();
-		setTimeout(function(){
-			DOM.passphrase.removeClass('error');
-		}, 2000);
-	};
 
 	$('#login').on('submit', function(evt){
 		evt.preventDefault();
