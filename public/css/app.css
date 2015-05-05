@@ -74,6 +74,7 @@ body.unlocked header {
 	flex-direction: column;
 	-webkit-flex-direction: column;
 	-webkit-justify-content: center;
+	width: 100%;
 }
 
 #login {
@@ -92,6 +93,8 @@ body.unlocked header {
 	margin-bottom: 1em;
 	color: #fff;
 	transition: background-color .2s ease-out;
+	box-sizing: border-box;
+	border-radius: 0;
 }
 
 #passphrase.error {
