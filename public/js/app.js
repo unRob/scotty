@@ -143,7 +143,7 @@ $(function(){
 		DOM.line1.data('direction', fwd);
 		DOM.line1.text(text);
 
-		setTimeout(textConnect, 500);
+		connectTO = setTimeout(textConnect, 500);
 	};
 
 	socket.on('connect', function(){
