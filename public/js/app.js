@@ -1,4 +1,35 @@
 $(function(){
+	var Token = function(data){
+		if (data) {
+			data = (typeof data === 'string') ? JSON.parse(data) : data;
+			this.token = data.token;
+			if (data.expires) {
+				console.log('setting expires');
+				this.expires = data.expires;
+				setTimeout(this.gc, (new Date()-this.expires));
+			}
+			if (data.admin) this.admin = data.admin;
+			localStorage.token = JSON.stringify({
+				token: this.token,
+				expires: this.expires,
+				admin: this.admin
+			});
+		}
+	};
+
+	Token.prototype.expired = function(){
+		return this.expires ? (new Date() < this.expires) : false;
+	};
+
+	Token.prototype.gc = function(){
+		console.log('garbage cleaning!');
+		localStorage.removeItem('token');
+	};
+
+	Token.prototype.valid = function(){
+		return this.token ? !this.expired() : false;
+	};
+
 
 	var LIVE = false;
 	var socket = io.connect('http://'+window.location.hostname);
@@ -123,36 +154,6 @@ $(function(){
 		}
 	});
 
-	var Token = function(data){
-		if (data) {
-			data = (typeof data === 'string') ? JSON.parse(data) : data;
-			this.token = data.token;
-			if (data.expires) {
-				console.log('setting expires');
-				this.expires = data.expires;
-				setTimeout(this.gc, (new Date()-this.expires));
-			}
-			if (data.admin) this.admin = data.admin;
-			localStorage.token = JSON.stringify({
-				token: this.token,
-				expires: this.expires,
-				admin: this.admin
-			});
-		}
-	};
-
-	Token.prototype.expired = function(){
-		return this.expires ? (new Date() < this.expires) : false;
-	};
-
-	Token.prototype.gc = function(){
-		console.log('garbage cleaning!');
-		localStorage.removeItem('token');
-	};
-
-	Token.prototype.valid = function(){
-		return this.token ? !this.expired() : false;
-	};
 
 	socket.on('connect', function(){
 		LIVE = true;
