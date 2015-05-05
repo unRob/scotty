@@ -1,42 +1,129 @@
 <!DOCTYPE html>
-<html manifest="cache.appcache">
+<html>
 
 	<head>
 		<meta charset="utf-8" />
 		<title>Scotty</title>
-		<meta name="apple-mobile-web-app-capable" content="yes">
-		<meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+		<!-- iPad retina icon -->
+		<link href="/img/icons/152x152.png"
+		      sizes="152x152"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPad retina icon (iOS < 7) -->
+		<link href="/img/icons/144x144.png"
+		      sizes="144x144"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPad non-retina icon -->
+		<link href="/img/icons/76x76.png"
+		      sizes="76x76"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPad non-retina icon (iOS < 7) -->
+		<link href="/img/icons/72x72.png"
+		      sizes="72x72"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPhone 6 Plus icon -->
+		<link href="/img/icons/180x180.png"
+		      sizes="120x120"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPhone retina icon (iOS < 7) -->
+		<link href="/img/icons/114x114.png"
+		      sizes="114x114"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- iPhone non-retina icon (iOS < 7) -->
+		<link href="/img/icons/57x57.png"
+		      sizes="57x57"
+		      rel="apple-touch-icon-precomposed">
+
+		<!-- STARTUP IMAGES -->
+
+		<!-- iPhone 6 Plus portrait startup image -->
+		<link href="/img/startup/1242x2148.png"
+		      media="(device-width: 414px) and (device-height: 736px)
+		             and (-webkit-device-pixel-ratio: 3)
+		             and (orientation: portrait)"
+		      rel="apple-touch-startup-image">
+
+		<!-- iPhone 6 Plus landscape startup image -->
+		<link href="/img/startup/1182x2208.png"
+		      media="(device-width: 414px) and (device-height: 736px)
+		             and (-webkit-device-pixel-ratio: 3)
+		             and (orientation: landscape)"
+		      rel="apple-touch-startup-image">
+
+		<!-- iPhone 6 startup image -->
+		<link href="/img/startup/750x1294.png"
+		      media="(device-width: 375px) and (device-height: 667px)
+		             and (-webkit-device-pixel-ratio: 2)"
+		      rel="apple-touch-startup-image">
+
+		<!-- iPhone 5 startup image -->
+		<link href="/img/startup/640x1096.png"
+		      media="(device-width: 320px) and (device-height: 568px)
+		             and (-webkit-device-pixel-ratio: 2)"
+		      rel="apple-touch-startup-image">
+
+		<!-- iPhone < 5 retina startup image -->
+		<link href="/img/startup/640x920.png"
+		      media="(device-width: 320px) and (device-height: 480px)
+		             and (-webkit-device-pixel-ratio: 2)"
+		      rel="apple-touch-startup-image">
+
+		<!-- iPhone < 5 non-retina startup image -->
+		<link href="/img/startup/320x460.png"
+		      media="(device-width: 320px) and (device-height: 480px)
+		             and (-webkit-device-pixel-ratio: 1)"
+		      rel="apple-touch-startup-image">
 
 		<link rel="stylesheet" href="css/reset.css" />
 		<link rel="stylesheet" href="css/app.css" />
-
 	</head>
 
 	<body>
 
-		<div id="status">
-			<p id="status-text">conectando</p>
-		</div>
+		<main>
 
-		<section id="bienvenida">
+			<header class="row">
+			</header>
 
-			<h1>Hola!</h1>
-			<p>Para entrar debes darme la frase secreta:</p>
-			<input type="text" name="passcode" id="passcode" autocapitalize="off" autocorrect="off" placeholder="Frase"/>
-			<a href="#" class="boton" id="entrar">Entrar</a>
+			<section class="row" id="content">
 
-		</section>
+				<div id="open">
+					<h1>
+						<a id="beam">
+							<span id="line-1">Beam</span>
+							<span id="line-2">me up</span>
+						</a>
+					</h1>
 
-		<section id="puerta">
-			<div id="loading"><img src="/img/pato-spinner.gif" /></div>
-			<div href="#" id="abrir">
-				<div id="inside">Giddy up!</div>
-			</div>
-		</section>
+					<ul id="beaming">
+						<li>5</li>
+						<li>4</li>
+						<li>3</li>
+						<li>2</li>
+						<li>1</li>
+						<li id="frase"></li>
+					</ul>
 
-		<section id="admin">
-			<input type="text" name="passcode" id="new-passcode" placeholder="¿qué pedo?" />
-		</section>
+				</div>
+
+				<form id="login">
+					<input type="text" name="passphrase" id="passphrase" placeholder="un password" autofocus/>
+					<button type="submit" id="login-do">entrar</button>
+				</form>
+
+			</section>
+
+			<footer class="row">scotty</footer>
+		</main>
 
 		<script src="js/jquery.js"></script>
 		<script src="socket.io/socket.io.js"></script>
