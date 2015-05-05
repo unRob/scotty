@@ -6,6 +6,10 @@
   "main": "app.coffee",
   "readmeFilename": "README.md",
   "license": "WTFPL",
+  "scripts": {
+    "compile": "coffee -c app.js",
+    "tessel": "node bin/make-firmware.js"
+  },
   "author": {
     "name": "Roberto Hidalgo",
     "email": "un@rob.mx",

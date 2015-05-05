@@ -1,46 +1,104 @@
 var tessel = require("tessel");
+var wifi = require('wifi-cc3000');
 var gpio = tessel.port.GPIO;
 var http = require('http');
 
-// para ver cuando se pide el elevador
 var led = tessel.led[1].output(0);
-// para ver que tessel ya inició (buggy as hell)
 var ledOn = tessel.led[0].output(0);
 var port = gpio.digital[1];
+ledOn.output(0);
 port.write(0);
 
-// Limitar acceso a red interna
-var remoteAddr = function(req) {
-	return req.connection.remoteAddress || req.connection.socket.remoteAddress;
+var ledTO = null;
+var pingTO = null;
+var CONNECTED = false;
+
+var connecting = function() {
+	ledOn.toggle();
+	ledTO = setTimeout(connecting, 1000);
+};
+connecting();
+
+var ping = function(){
+	console.log('pinging');
+	try {
+		http.get("http://puerta.pati.to/ping", function(res){
+			console.log("pinged");
+		}).on('error', function(e){
+			console.log("control server off", e.message);
+		});
+	} catch(err) {
+		console.log('couldnt ping');
+	}
+
+	setTimeout(ping, 600000);
 };
 
-// Llamar el elevador
-var push_the_red_button = function(){
-	led.toggle();
-	port.write(1);
-	setTimeout(function(){
-		port.write(0);
+var wifi_config = process.argv.pop();
+var connect = function(){
+	wifi.connect(wifi_config);
+};
+var powerCycle = function() {
+	wifi.reset(function(){
+		timeouts = 0;
+		console.log('done power-cycling');
+		setTimeout(function(){
+			if (!wifi.isConnected()){
+				connect();
+			}
+		}, 20000);
+	});
+};
+
+var server = null;
+wifi.on('connect', function(data){
+	console.log("WIFI connected, addr: "+data.ip);
+	clearTimeout(ledTO);
+	ledOn.output(1);
+
+	var push_the_red_button = function() {
 		led.toggle();
-	}, 500);
-};
+		port.write(1);
+		setTimeout(function(){
+			port.write(0);
+			led.toggle();
+		}, 500);
+	};
 
-var handle_request = function(req, res) {
-	push_the_red_button();
-	console.log('incoming');
-	res.writeHead(200, {'Content-type': 'text/plain'});
-	res.end("Ok\n");
-};
+	var handle_request = function(req, res){
+		push_the_red_button();
+		console.log('incoming');
+		res.writeHead(200, {'Content-type': 'text/plain'});
+		res.end("Ok\n");
+	};
 
-var server = http.createServer(handle_request);
-server.listen(80, '127.0.0.1');
+	tessel.button.on('press', function(time){
+		console.log('button');
+		push_the_red_button();
+	});
 
-// Ya estamos arriba
-console.log("Listening on "+80);
-ledOn.output(1);
-setTimeout(function(){ledOn.output(0);}, 5000);
+	server = http.createServer(handle_request);
+	server.listen(80, function(){
+		console.log("HTTP ready on port 80");
+		CONNECTED = true;
+		ping();
+	});
+});
 
-// Debug
-tessel.button.on('press', function(time){
-	console.log(time);
-	push_the_red_button();
+wifi.on('disconnect', function(){
+	CONNECTED = FALSE;
+	console.log("WIFI disconnected");
+	ledOn.output(0);
+	setTimeout(connect, 30000);
+});
+
+wifi.on('timeout', function(err){
+	console.log("WIFI timeout");
+	timeouts++;
+	if (timeouts > 2) {
+		console.log('power-cycling');
+		powerCycle();
+	} else {
+		connect();
+	}
 });
