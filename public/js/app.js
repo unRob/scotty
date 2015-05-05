@@ -226,7 +226,7 @@ $(function(){
 		if (!LIVE) return false;
 		var frase = frases.random();
 		var clase = '';
-		if (frase.length >= 6) {
+		if (frase.length >= 5) {
 			clase = 'small';
 		}
 		DOM.frase.text(frase).attr('class', clase);
