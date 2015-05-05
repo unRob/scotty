@@ -139,6 +139,7 @@ $(function(){
 
 	socket.on('authorized', function(data){
 		$('body').addClass('unlocked');
+		DOM.passphrase.blur();
 		console.log(data);
 		token = new Token(data);
 		console.log('saved');
