@@ -3,8 +3,7 @@ $(function(){
 	var LIVE = false;
 	var socket = io.connect('http://'+window.location.hostname);
 	var token = new Token(localStorage.token);
-	//'Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'Hallo',
-	var frases = ['नमस्कार', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
+	var frases = ['Hola', 'Niltze', 'Kao', 'Olá', 'Hello', 'Ciao', 'Zdravo', 'Hallo', 'नमस्कार', ['Bonjour', 'Bonsoir'], 'こんにちは', 'Γεια σας'];
 	frases.random = function(){
 		var greeting = this[Math.floor(Math.random()*this.length)];
 		if (typeof greeting !== 'string') {
