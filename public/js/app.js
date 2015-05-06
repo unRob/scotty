@@ -1,4 +1,13 @@
 $(function(){
+	var DOM = {
+		login: $('#login'),
+		passphrase: $('#passphrase'),
+		line1: $('#line-1'),
+		line2: $('#line-2'),
+		frase: $('#frase')
+	};
+	DOM.login.hide();
+
 	var Token = function(data){
 		if (data) {
 			data = (typeof data === 'string') ? JSON.parse(data) : data;
@@ -39,16 +48,10 @@ $(function(){
 		var greeting = this[Math.floor(Math.random()*this.length)];
 		if (typeof greeting !== 'string') {
 			var d = new Date();
+			console.log(d);
 			greeting = greeting[+(d.getHour()>12)];
 		}
 		return greeting;
-	};
-
-	var DOM = {
-		passphrase: $('#passphrase'),
-		line1: $('#line-1'),
-		line2: $('#line-2'),
-		frase: $('#frase')
 	};
 
 	var connectTO = false;
@@ -174,26 +177,37 @@ $(function(){
 	if (token.valid()) {
 		socket.emit('auth', {token: token.token});
 	} else {
-		console.log(token);
+		DOM.login.show();
+		DOM.passphrase.focus();
 		if (token.token) token.gc();
 	}
 
 	socket.on('authorized', function(data){
 		$('body').addClass('unlocked');
 		DOM.passphrase.blur();
-		console.log(data);
 		token = new Token(data);
-		console.log('saved');
 	});
 
 	socket.on('unauthorized', function(){
 		$('body').removeClass('unlocked');
+		DOM.passphrase.focus();
 		console.log('unauthorized');
 		token.gc();
 	});
 
-
 	socket.on('beaming', function(){
+		LIVE = true;
+		console.log('beaming!');
+		var frase = frases.random();
+		var clase = '';
+		if (frase.length >= 5) {
+			clase = 'small';
+		}
+		DOM.frase.text(frase).attr('class', clase);
+		$('body').addClass('beaming');
+		clearTimeout(connectTO);
+		DOM.line1.text('BEAM').data('direction', false);
+		DOM.line2.show();
 		console.log("Response time: "+((new Date())-started)/1000+'s');
 		console.log('done!');
 	});
@@ -201,6 +215,12 @@ $(function(){
 	socket.on('error', function(){
 		console.log("Response time: "+((new Date())-started)/1000+'s');
 		console.log('error');
+		$('body').removeClass('beaming beamed');
+		LIVE = true;
+		clearTimeout(connectTO);
+		DOM.line1.text('BEAM').data('direction', false);
+		DOM.line2.show();
+		alert('Algo se cagó :(');
 	});
 
 
@@ -225,13 +245,10 @@ $(function(){
 	$('#beam').on('click', function(evt){
 		evt.preventDefault();
 		if (!LIVE) return false;
-		var frase = frases.random();
-		var clase = '';
-		if (frase.length >= 5) {
-			clase = 'small';
-		}
-		DOM.frase.text(frase).attr('class', clase);
-		$('body').addClass('beaming');
+		LIVE = false
+		DOM.line1.text('[•    ]').data('direction', true);
+		DOM.line2.hide();
+		textConnect();
 		socket.emit('beam');
 		started = new Date();
 	});

@@ -28,7 +28,7 @@ mongo.connect 'mongodb://localhost:27017/scotty', (err, dbo)->
 
 
 httpOpts =
-	hostname: '10.0.1.13'
+	hostname: '10.0.1.12'
 	port: 80,
 	path: '/',
 	method: 'GET'
@@ -36,20 +36,33 @@ httpOpts =
 beamMeUp = (cb)->
 	console.log 'beaming'
 	req = http.request httpOpts
-	req.on 'response', (res)->
-		console.log('responded')
-		cb && cb(false)
-		lastSeen = new Date();
-	req.on 'error', (res)->
-		console.log('err', res)
-		cb && cb(true)
-
 	req.end()
+
+	responded = false
+	req.setTimeout 5000, ()->
+		return false if responded
+		console.log('timeout')
+		cb && cb(true);
+
+	try
+		req.on 'response', (res)->
+			responded = true
+			console.log('responded')
+			cb && cb(false)
+			lastSeen = new Date();
+		req.on 'error', (res)->
+			console.log('err', res)
+			cb && cb(true)
+	catch e
+		console.log('asdf')
+
 	return true
 
 app.get '/ping', (req, res)->
 	lastSeen = new Date();
-	res.send('Welcome, tessel');
+	httpOpts.hostname = req.connection.remoteAddress.split(':').pop()
+	console.log "ip: #{httpOpts.hostname}"
+	res.send 'Welcome, tessel'
 
 app.get '/', (req,res)->
 	res.sendfile('index.html');

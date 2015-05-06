@@ -22,16 +22,16 @@ connecting();
 var ping = function(){
 	console.log('pinging');
 	try {
-		http.get("http://puerta.pati.to/ping", function(res){
+		http.get("http://10.0.1.42:8137/ping", function(res){
 			console.log("pinged");
 		}).on('error', function(e){
-			console.log("control server off", e.message);
+			console.log("Ping error: ", e.message);
 		});
 	} catch(err) {
-		console.log('couldnt ping');
+		console.log('Ping failed');
 	}
 
-	setTimeout(ping, 600000);
+	setTimeout(ping, 60000);
 };
 
 var wifi_config = process.argv.pop();
