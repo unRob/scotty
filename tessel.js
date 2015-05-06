@@ -22,7 +22,7 @@ connecting();
 var ping = function(){
 	console.log('pinging');
 	try {
-		http.get("http://10.0.1.42:8137/ping", function(res){
+		http.get("http://puerta.pati.to/ping", function(res){
 			console.log("pinged");
 		}).on('error', function(e){
 			console.log("Ping error: ", e.message);
